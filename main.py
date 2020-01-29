@@ -16,7 +16,7 @@ grouped_df = df.groupby(
   'bbgid',
   # We don't need sorting, so we remove it for speed 
   sort=False
-  )['dt'].apply(list).reset_index(name='dates')
+  )['dt'].agg(list).reset_index(name='dates')
 
 gaps = GapHeap()
 def find_gaps(row):
