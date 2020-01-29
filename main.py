@@ -18,7 +18,10 @@ def foo(row):
   dates.sort()
   for old_date, new_date in pairwise(dates):
     length = (new_date - old_date).days
-    gaps.append([old_date, new_date, length, bbgid])
+    if length > 1:
+      start = old_date + datetime.timedelta(days=1)
+      end = new_date - datetime.timedelta(days=1)
+      gaps.append([start, end, length, bbgid])
 
 gaps = []
 grouped_df.apply(foo, axis=1)  
