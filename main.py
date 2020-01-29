@@ -12,9 +12,10 @@ start_time = time.time()
 # load input data set (Python pickle file)
 df = pd.read_pickle('px.xz')
 
+# Create a list of dates for each id
 grouped_df = df.groupby(
   'bbgid',
-  # We don't need sorting, so we remove it for speed 
+  # We don't need to sort the ids, so we remove it for speed 
   sort=False
   )['dt'].agg(list).reset_index(name='dates')
 
