@@ -1,5 +1,5 @@
 from collections import namedtuple
-from heapq import heappush, nlargest, heapreplace
+from heapq import heappush, nlargest, heapreplace, heappushpop
 from pandas import DataFrame
 
 # Maximum number of records stored
@@ -17,9 +17,9 @@ class GapHeap:
     # First item is the heap priority
     item = (length, Gap(start=start, end=end, length=length, bbgid=bbgid))
 
-    if len(self.gap_heap) == MAXIMUM_RECORDS and length > self.gap_heap[0][0]:
+    if len(self.gap_heap) == MAXIMUM_RECORDS:
       # heappushpop always removes the smallest item, meaning that we will always have the largest gaps
-      heapreplace(self.gap_heap, item)
+      heappushpop(self.gap_heap, item)
     else:
       heappush(self.gap_heap, item)
 
