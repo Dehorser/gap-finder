@@ -1,7 +1,7 @@
 # load modules
+import datetime
 import pandas as pd
 import time
-import datetime
 from more_itertools import pairwise
 
 from gap_heap import GapHeap
@@ -12,7 +12,11 @@ start_time = time.time()
 # load input data set (Python pickle file)
 df = pd.read_pickle('px.xz')
 
-grouped_df = df.groupby('bbgid', sort=False)['dt'].apply(list).reset_index(name='dates')
+grouped_df = df.groupby(
+  'bbgid',
+  # We don't need sorting, so we remove it for speed 
+  sort=False
+  )['dt'].apply(list).reset_index(name='dates')
 
 gaps = GapHeap()
 def find_gaps(row):
