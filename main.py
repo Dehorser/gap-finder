@@ -4,6 +4,8 @@ import time
 import datetime
 from more_itertools import pairwise
 
+from gap_heap import GapHeap
+
 # log start time
 start_time = time.time()
 
@@ -12,22 +14,23 @@ df = pd.read_pickle('px.xz')
 
 grouped_df = df.groupby('bbgid', sort=False)['dt'].apply(list).reset_index(name='dates')
 
-def foo(row):
+gaps = GapHeap()
+def find_gaps(row):
   bbgid = row['bbgid']
   dates = row['dates']
   dates.sort()
   for old_date, new_date in pairwise(dates):
-    length = (new_date - old_date).days
-    if length > 1:
+    # Treat consecutive days as a gap of 0
+    length = (new_date - old_date).days - 1
+    if length > 0:
       start = old_date + datetime.timedelta(days=1)
       end = new_date - datetime.timedelta(days=1)
-      gaps.append([start, end, length, bbgid])
+      gaps.add(start, end, length, bbgid)
 
-gaps = []
-grouped_df.apply(foo, axis=1)  
+grouped_df.apply(find_gaps, axis=1)  
 
 # export result to Excel
-stats = pd.DataFrame(gaps, columns=['start', 'end', 'length', 'bbgid']).sort_values('length', ascending=False)
+stats = gaps.to_dataframe()
 stats.iloc[0:1000].to_excel('px_stats.xlsx') 
 
 # show execution time
