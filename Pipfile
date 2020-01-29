@@ -8,6 +8,8 @@ pylint = "*"
 
 [packages]
 pandas = "*"
+more-itertools = "*"
+openpyxl = "*"
 
 [requires]
 python_version = "3.8"
